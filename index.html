@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemesanan Sepatu</title>
+    <style>
+        body {
+            background-color: #2e54be;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+        }
+        .form-container h1 {
+            color: #130a96;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* memastikan ukuran termasuk padding */
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #1a00aa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0300bb;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Pemesanan Sepatu</h1>
+        <form id="shoeOrderForm">
+            <label for="name">Nama Lengkap:</label>
+            <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap" required>
+            <div id="nameError" class="error" style="display: none;">Silakan masukkan nama lengkap!</div>
+
+            <label for="model">Pilih Model Sepatu:</label>
+            <select id="model" name="model" required>
+                <option value="" disabled selected>--Pilih Model Sepatu--</option>
+                <option value="Nike Air Max">Nike Air Max</option>
+                <option value="Adidas Ultraboost">Adidas Ultraboost</option>
+                <option value="Puma Suede">Puma Suede</option>
+                <option value="Reebok Classic">Reebok Classic</option>
+            </select>
+            <div id="modelError" class="error" style="display: none;">Silakan pilih model sepatu!</div>
+
+            <label for="size">Pilih Ukuran Sepatu:</label>
+            <select id="size" name="size" required>
+                <option value="" disabled selected>--Pilih Ukuran--</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+            </select>
+            <div id="sizeError" class="error" style="display: none;">Silakan pilih ukuran sepatu!</div>
+
+            <label for="quantity">Jumlah Pesanan:</label>
+            <input type="number" id="quantity" name="quantity" placeholder="Masukkan jumlah pesanan" required min="1">
+            <div id="quantityError" class="error" style="display: none;">Silakan masukkan jumlah pesanan!</div>
+
+            <label for="voucher">Kode Voucher (opsional):</label>
+            <input type="text" id="voucher" name="voucher" placeholder="Masukkan kode voucher">
+            <div id="voucherError" class="error" style="display: none;">Kode voucher tidak valid!</div>
+
+            <button type="button" onclick="calculateTotal()">Hitung Total</button>
+        </form>
+
+        <div id="result" style="margin-top: 20px; text-align: left; font-weight: bold; font-size: 14px;"></div>
+    </div>
+
+    <script>
+        function calculateTotal() {
+            // Mengambil nilai input
+            const name = document.getElementById("name").value.trim();
+            const model = document.getElementById("model").value;
+            const size = document.getElementById("size").value;
+            const quantity = document.getElementById("quantity").value;
+            const voucher = document.getElementById("voucher").value.trim();
+
+            // Validasi input
+            let valid = true;
+
+            // Validasi nama lengkap
+            if (!name) {
+                document.getElementById("nameError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("nameError").style.display = "none";
+            }
+
+            // Validasi model sepatu
+            if (!model) {
+                document.getElementById("modelError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("modelError").style.display = "none";
+            }
+
+            // Validasi ukuran sepatu
+            if (!size) {
+                document.getElementById("sizeError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("sizeError").style.display = "none";
+            }
+
+            // Validasi jumlah pesanan
+            if (!quantity || quantity < 1) {
+                document.getElementById("quantityError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("quantityError").style.display = "none";
+            }
+
+            // Validasi kode voucher
+            if (voucher && voucher.toLowerCase() !== "akhir tahun") {
+                document.getElementById("voucherError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("voucherError").style.display = "none";
+            }
+
+            if (!valid) {
+                return;
+            }
+
+            // Harga awal per sepatu berdasarkan model
+            let price = 0;
+            switch (model) {
+                case "Nike Air Max":
+                    price = 1500000;
+                    break;
+                case "Adidas Ultraboost":
+                    price = 1800000;
+                    break;
+                case "Puma Suede":
+                    price = 1200000;
+                    break;
+                case "Reebok Classic":
+                    price = 1300000;
+                    break;
+                default:
+                    break;
+            }
+
+            // Total harga sebelum diskon
+            let totalPrice = price * quantity;
+
+            // Hitung diskon jika ada
+            let discount = 0;
+            if (voucher.toLowerCase() === "akhir tahun") {
+                discount = totalPrice * 0.1;  // Diskon 10%
+            }
+
+            // Harga setelah diskon
+            let priceAfterDiscount = totalPrice - discount;
+
+            // Hitung PPN (5%)
+            const ppn = priceAfterDiscount * 0.05;
+
+            // Total akhir yang harus dibayar
+            const totalToPay = priceAfterDiscount + ppn;
+
+            // Tampilkan hasil
+            document.getElementById("result").innerHTML = `
+                <p>Nama Pemesan: ${name}</p>
+                <p>Model Sepatu: ${model}</p>
+                <p>Ukuran: ${size}</p>
+                <p>Jumlah Pesanan: ${quantity}</p>
+                <p>Harga per Sepatu: Rp ${price.toLocaleString("id-ID")}</p>
+                <p>Total Harga: Rp ${totalPrice.toLocaleString("id-ID")}</p>
+                <p>Diskon (10%): Rp ${discount.toLocaleString("id-ID")}</p>
+                <p>PPN (5%): Rp ${ppn.toLocaleString("id-ID")}</p>
+                <p><strong>Total yang Harus Dibayar: Rp ${totalToPay.toLocaleString("id-ID")}</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
